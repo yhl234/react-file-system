@@ -21,9 +21,9 @@ function App() {
           <Route path="/file-browser">
             <FileBrowser />
           </Route>
-          <Route path="/">
+          {/* <Route path="/">
             <Redirect to="/counter" />
-          </Route>
+          </Route> */}
         </Switch>
       </Router>
     </div>

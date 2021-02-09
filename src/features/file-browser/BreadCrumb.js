@@ -4,7 +4,7 @@ import { Link, Switch, Route, useRouteMatch } from 'react-router-dom';
 import {
   selectBreadCrumbLinks,
   addToBreadCrumb,
-  selectLastLocation,
+  removeFromBreadCrumb,
 } from './breadCrumbSlice';
 
 const BreadCrumb = () => {
@@ -14,9 +14,12 @@ const BreadCrumb = () => {
   const test = () => {
     const temp = {
       name: new Date().toString(),
-      to: `/${new Date().toString()}`,
+      to: `${new Date().toString()}`,
     };
     dispatch(addToBreadCrumb(temp));
+  };
+  const backToDir = to => {
+    dispatch(removeFromBreadCrumb({ to }));
   };
   return (
     <div>
@@ -25,19 +28,24 @@ const BreadCrumb = () => {
         {/* <li>
           <Link to={`${url}/1`}>1</Link>
         </li>
-        <li>
-          <Link to={`${url}/12`}>12</Link>
-        </li>
+     
         <li>
           <Link to={`${url}/2`}>2</Link>
         </li>
         <li>
           <Link to={`${url}/3`}>3</Link>
         </li> */}
+        <li>
+          <Link to={`${url}`} onClick={() => backToDir('')}>
+            root
+          </Link>
+        </li>
         {breadCrumbLinks.map(b => {
           return (
             <li key={b.name}>
-              <Link to={`${url}${b.to}`}>{b.name}</Link>
+              <Link to={`${url}/${b.to}`} onClick={() => backToDir(b.to)}>
+                {b.name}
+              </Link>
             </li>
           );
         })}

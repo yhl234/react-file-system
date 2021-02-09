@@ -17,10 +17,20 @@ export const breadCrumbSlice = createSlice({
       state.lastLocation = temp;
       state.links.push({ ...action.payload, to: temp });
     },
+    removeFromBreadCrumb: (state, action) => {
+      const { to } = action.payload;
+      console.log(to);
+      const index = state.links.findIndex(i => i.to === to);
+      state.lastLocation = to;
+      state.links = state.links.slice(0, index + 1);
+    },
   },
 });
 
-export const { addToBreadCrumb } = breadCrumbSlice.actions;
+export const {
+  addToBreadCrumb,
+  removeFromBreadCrumb,
+} = breadCrumbSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This

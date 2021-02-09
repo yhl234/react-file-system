@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-import breadCrumbReducer from '../features/file-browser/breadCrumbSlice';
+import rootReducer from './rootReducer';
 
-export default configureStore({
-  reducer: {
-    counter: counterReducer,
-    breadCrumb: breadCrumbReducer,
-  },
+const store = configureStore({
+  reducer: rootReducer,
 });
+
+module.hot.accept('./rootReducer', () => {
+  const newRootReducer = require('./rootReducer').default;
+  store.replaceReducer(newRootReducer);
+});
+export default store;
