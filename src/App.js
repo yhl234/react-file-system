@@ -22,7 +22,7 @@ function App() {
             <FileBrowser />
           </Route>
           {/* <Route path="/">
-            <Redirect to="/counter" />
+            <Redirect to="/file-browser" />
           </Route> */}
         </Switch>
       </Router>

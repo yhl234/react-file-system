@@ -1,15 +1,28 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+export const fetchData = createAsyncThunk(
+  'breadCrumb/fetchData',
+  async (lastLocation, thunkAPI) => {
+    console.log(lastLocation);
+    const response = await axios.get(
+      `http://localhost:9000/api/files/${lastLocation}`
+    );
+    return response.data;
+  }
+);
 
 export const breadCrumbSlice = createSlice({
   name: 'breadCrumb',
   initialState: {
-    lastLocation: '',
+    lastLocation: 'root',
     links: [
       {
         name: 'root',
         to: '',
       },
     ],
+    files: [],
   },
   reducers: {
     addToBreadCrumb: (state, action) => {
@@ -21,8 +34,13 @@ export const breadCrumbSlice = createSlice({
       const { to } = action.payload;
       console.log(to);
       const index = state.links.findIndex(i => i.to === to);
-      state.lastLocation = to;
+      state.lastLocation = to || 'root';
       state.links = state.links.slice(0, index + 1);
+    },
+  },
+  extraReducers: {
+    [fetchData.fulfilled]: (state, action) => {
+      state.files = action.payload;
     },
   },
 });
@@ -48,5 +66,6 @@ export const {
 export const selectBreadCrumb = state => state.breadCrumb;
 export const selectBreadCrumbLinks = state => state.breadCrumb.links;
 export const selectLastLocation = state => state.breadCrumb.lastLocation;
+export const selectFiles = state => state.breadCrumb.files;
 
 export default breadCrumbSlice.reducer;
