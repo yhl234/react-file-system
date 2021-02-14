@@ -2,7 +2,7 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][screenshot]](https://github.com/yhl234/react-file-system/images/screenshot.png)
+![Product Name Screen Shot](https://raw.githubusercontent.com/yhl234/react-file-system/master/images/screenshot.png)
 
 This is an simple file browser project with following features:
 
