@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Breadcrumbs } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { selectBreadCrumbLinks, removeFromBreadCrumb } from './breadCrumbSlice';
+import {
+  selectBreadCrumbLinks,
+  selectLastLocation,
+  updateLinks,
+} from './breadCrumbSlice';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,23 +18,22 @@ const useStyles = makeStyles(theme => ({
 const BreadCrumb = () => {
   const classes = useStyles();
 
-  const { path, url } = useRouteMatch();
   const breadCrumbLinks = useSelector(selectBreadCrumbLinks);
+  const lastLocation = useSelector(selectLastLocation);
+
   const dispatch = useDispatch();
-  const backToDir = to => {
-    dispatch(removeFromBreadCrumb({ to }));
-  };
+
+  useEffect(() => {
+    dispatch(updateLinks(lastLocation));
+  }, [lastLocation]);
+
   return (
     <div className={classes.root}>
       <h2>Files browser</h2>
       <Breadcrumbs>
         {breadCrumbLinks.map(b => {
           return (
-            <Link
-              key={b.name}
-              to={`${url}/${b.to}`}
-              onClick={() => backToDir(b.to)}
-            >
+            <Link key={b.name} to={`/file-browser${b.to}`}>
               {b.name}
             </Link>
           );

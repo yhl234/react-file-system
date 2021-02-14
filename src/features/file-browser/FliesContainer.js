@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-
+import { useHistory, useLocation } from 'react-router-dom';
 import { Grid, Card, CircularProgress, Typography } from '@material-ui/core';
 import { FolderOpen, Description } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   selectFiles,
   selectLastLocation,
-  addToBreadCrumb,
+  updateLastLocation,
   fetchData,
 } from './breadCrumbSlice';
 
@@ -29,23 +28,28 @@ const useStyles = makeStyles(theme => ({
 const FliesContainer = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { path, url } = useRouteMatch();
-
+  const location = useLocation();
   const dispatch = useDispatch();
+
   const lastLocation = useSelector(selectLastLocation);
   const files = useSelector(selectFiles);
+  const filePath = location.pathname.replace('/file-browser/', '');
 
+  // update lastLocation form url
+  useEffect(() => {
+    if (filePath !== lastLocation) {
+      dispatch(updateLastLocation(filePath));
+    }
+  }, [filePath]);
+
+  // get data if lastLocation changed
   useEffect(() => {
     dispatch(fetchData(lastLocation));
   }, [lastLocation]);
 
+  // change the url
   const handleClick = item => {
-    const temp = {
-      name: item.name,
-      to: `/${item.name}`,
-    };
-    dispatch(addToBreadCrumb(temp));
-    history.push(`${path}/${lastLocation}/${item.name}`);
+    history.push(`${location.pathname}/${item.name}`);
   };
 
   let content;

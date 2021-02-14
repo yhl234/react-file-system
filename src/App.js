@@ -6,7 +6,6 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import { Counter } from './features/counter/Counter';
 import FileBrowser from './features/file-browser';
 
 function App() {
@@ -15,15 +14,12 @@ function App() {
       <CssBaseline />
       <Router>
         <Switch>
-          <Route path="/counter">
-            <Counter />
-          </Route>
-          <Route path="/file-browser">
+          <Route path="/file-browser/root">
             <FileBrowser />
           </Route>
-          {/* <Route path="/">
-            <Redirect to="/file-browser" />
-          </Route> */}
+          <Route path="/">
+            <Redirect to="/file-browser/root" />
+          </Route>
         </Switch>
       </Router>
     </div>
