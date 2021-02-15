@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Grid, Card, CircularProgress, Typography } from '@material-ui/core';
@@ -6,6 +6,7 @@ import { FolderOpen, Description } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   selectFiles,
+  selectFile,
   selectLastLocation,
   updateLastLocation,
   fetchData,
@@ -33,6 +34,7 @@ const FliesContainer = () => {
 
   const lastLocation = useSelector(selectLastLocation);
   const files = useSelector(selectFiles);
+  const file = useSelector(selectFile);
   const filePath = location.pathname.replace('/file-browser/', '');
 
   // update lastLocation form url
@@ -47,27 +49,38 @@ const FliesContainer = () => {
     dispatch(fetchData(lastLocation));
   }, [lastLocation]);
 
-  // change the url
+  // change the url and set file name
   const handleClick = item => {
-    history.push(`${location.pathname}/${item.name}`);
+    const { name, type } = item;
+    history.push(`${location.pathname}/${name}`);
   };
 
   let content;
   if (!files) {
-    content = <CircularProgress />;
-  } else if (files.length === 0 && lastLocation.includes('.')) {
+    // loading
     content = (
       <Grid item sm={12}>
-        <Typography align="center">File preview</Typography>
+        <CircularProgress />
+      </Grid>
+    );
+  } else if (files.length === 0 && file && file.name) {
+    // file
+    content = (
+      <Grid item sm={12}>
+        <Typography align="center">
+          THIS IS FILE: {file.name || `file preview`}
+        </Typography>
       </Grid>
     );
   } else if (files.length === 0) {
+    // empty
     content = (
       <Grid item sm={12}>
         <Typography align="center">Nothing here</Typography>
       </Grid>
     );
   } else {
+    // folders
     content = (
       <>
         {files.map((f, i) => {

@@ -16,7 +16,8 @@ export const breadCrumbSlice = createSlice({
   initialState: {
     lastLocation: 'root',
     links: [],
-    files: [],
+    files: null,
+    file: { name: null },
   },
   reducers: {
     updateLastLocation: (state, action) => {
@@ -24,6 +25,7 @@ export const breadCrumbSlice = createSlice({
     },
     updateLinks: {
       prepare: value => {
+        const tempFile = { name: null };
         const pathArray = value
           .split('/')
           .filter(p => p !== '')
@@ -32,16 +34,20 @@ export const breadCrumbSlice = createSlice({
               acc.tempTo += `/${curr}`;
               const container = {};
               container.name = curr;
+              if (curr.includes('.')) {
+                tempFile.name = curr;
+              }
               container.to = acc.tempTo;
               acc.links.push(container);
               return acc;
             },
             { links: [], tempTo: '' }
           );
-        return { payload: { links: pathArray.links } };
+        return { payload: { links: pathArray.links, file: tempFile } };
       },
       reducer: (state, action) => {
         state.links = action.payload.links;
+        state.file = action.payload.file;
       },
     },
   },
@@ -63,5 +69,6 @@ export const selectBreadCrumb = state => state.breadCrumb;
 export const selectBreadCrumbLinks = state => state.breadCrumb.links;
 export const selectLastLocation = state => state.breadCrumb.lastLocation;
 export const selectFiles = state => state.breadCrumb.files;
+export const selectFile = state => state.breadCrumb.file;
 
 export default breadCrumbSlice.reducer;
