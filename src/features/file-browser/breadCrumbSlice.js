@@ -52,6 +52,9 @@ export const breadCrumbSlice = createSlice({
     },
   },
   extraReducers: {
+    [fetchData.pending]: (state, action) => {
+      state.files = null;
+    },
     [fetchData.fulfilled]: (state, action) => {
       state.files = action.payload;
     },
