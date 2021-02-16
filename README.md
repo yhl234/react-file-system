@@ -21,3 +21,10 @@ This is an simple file browser project with following features:
 - [Redux](https://redux.js.org/)
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Material-Ui](https://material-ui.com/)
+
+### .env
+
+- local server
+  - REACT_APP_BASE_URL="http://localhost:9000/api"
+- live server
+  - REACT_APP_BASE_URL="https://yhl234-file-system.herokuapp.com/api"
